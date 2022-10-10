@@ -37,18 +37,12 @@
        (resolve env (cadr parsed-code)))
       ;(bool-exp op (neo-exp) (neo-exp))
       ((equal? (car parsed-code) 'bool-exp)
-       (run-bool-exp (cadr parsed-code)
-                     (run-neo-parsed-code (caddr parsed-code) env)
-                     (run-neo-parsed-code (cadddr parsed-code) env)))
+       (run-bool-parsed-code parsed-code env))
       ;(math-exp op (neo-exp) (neo-exp))
       ((equal? (car parsed-code) 'math-exp)
-       (run-math-exp (cadr parsed-code)
-                     (run-neo-parsed-code (caddr parsed-code) env)
-                     (run-neo-parsed-code (cadddr parsed-code) env)))
+       (run-math-parsed-code parsed-code env))
       ((equal? (car parsed-code) 'ask-exp)
-       (if (run-neo-parsed-code (cadr parsed-code) env)
-           (run-neo-parsed-code (caddr parsed-code) env)
-           (run-neo-parsed-code (cadddr parsed-code) env)))
+       (run-ask-parsed-code parsed-code env))
       ((equal? (car parsed-code) 'func-exp)
        (run-neo-parsed-code (cadr (caddr parsed-code)) env))
       (else (run-neo-parsed-code
@@ -62,5 +56,31 @@
       )
     ) 
   )
+
+(define run-bool-parsed-code
+  (lambda (parsed-code env)
+    (run-bool-exp (cadr parsed-code)
+                     (run-neo-parsed-code (caddr parsed-code) env)
+                     (run-neo-parsed-code (cadddr parsed-code) env))
+    )
+  )
+
+(define run-math-parsed-code
+  (lambda (parsed-code env)
+    (run-math-exp (cadr parsed-code)
+                     (run-neo-parsed-code (caddr parsed-code) env)
+                     (run-neo-parsed-code (cadddr parsed-code) env))
+    )
+  )
+
+(define run-ask-parsed-code
+  (lambda (parsed-code env)
+    (if (run-neo-parsed-code (cadr parsed-code) env)
+           (run-neo-parsed-code (caddr parsed-code) env)
+           (run-neo-parsed-code (cadddr parsed-code) env))
+    )
+  )
+    
+    
 
 (provide (all-defined-out))
