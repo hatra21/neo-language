@@ -44,7 +44,7 @@
       ((equal? (car parsed-code) 'ask-exp)
        (run-ask-parsed-code parsed-code env))
       ((equal? (car parsed-code) 'func-exp)
-       (run-neo-parsed-code (cadr (caddr parsed-code)) env))
+        (run-function-parsed-code parsed-code env))
       (else (run-neo-parsed-code
              (cadr parsed-code) ;function expression
              (extend-env
@@ -80,6 +80,13 @@
            (run-neo-parsed-code (cadddr parsed-code) env))
     )
   )
+
+(define run-function-parsed-code
+  (lambda (parsed-code env)
+    (run-neo-parsed-code (cadr (caddr parsed-code)) env)
+    )
+  )
+    
     
     
 
